@@ -9,7 +9,7 @@ kubeless function deploy bitcoinfn --runtime python3.7 \
                                 --from-file main.py \
                                 --dependencies ./requirements.txt \
                                 --env CI_ENV="development" \
-                                --handler main.hello
+                                --handler main.entry
 
 
 kubeless function ls -n default

@@ -19,10 +19,10 @@ spec:
             "annotation": "pod"
         spec:
           containers:
-            - env:
+            - name: "bitcoinfn"
+              env:
               - name: CI_ENV
                 value: "development"
-              name: "hello"
               resources:
                 limits:
                   cpu: 400m
@@ -32,7 +32,7 @@ spec:
                   memory: 200Mi
   runtime: python3.7
   timeout: "300"
-  handler: main.hello
+  handler: main.entry
   deps: ""
   checksum: sha256:c7c3d204f1d696690927c719772745afad6a249ccceacbd6363f34400fe6fa89
   function: https://github.com/juliocesarscheidt/kubeless-project/raw/main/function.zip?raw=true

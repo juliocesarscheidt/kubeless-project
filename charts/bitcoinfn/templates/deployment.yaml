@@ -23,10 +23,11 @@ spec:
             {{- include "bitcoinfn.selectorLabels" . | nindent 12 }}
         spec:
           containers:
-            - env:
+            - name: "bitcoinfn"
+              env:
               - name: CI_ENV
                 value: "development"
-              name: "hello"
+
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}
   runtime: python3.7

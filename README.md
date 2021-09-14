@@ -2,9 +2,9 @@
 
 This project uses Kubeless to run lambda functions inside a Kubernetes cluster.
 
-Also it uses Helm to deploy the chart on Kubernetes.
+It also uses Helm to deploy the chart on Kubernetes.
 
-> to deploy it, the kubeless is required to be running on cluster:
+> In order to deploy it, the kubeless must be running in the cluster:
 [Kubeless Quick Start](https://kubeless.io/docs/quick-start/)
 
 ## Up and Running
