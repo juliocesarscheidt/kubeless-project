@@ -1,0 +1,26 @@
+# install requirements
+FROM python:3.6-alpine AS build
+
+WORKDIR /usr/src/app
+
+RUN mkdir -p ./package
+
+COPY requirements.txt .
+RUN pip install -r \
+    requirements.txt --no-cache-dir --target ./package
+
+COPY ./ ./
+
+# packing
+FROM alpine:3.7 AS pack
+
+WORKDIR /usr/src/app
+
+RUN apk add --no-cache zip curl
+COPY --from=build /usr/src/app ./
+
+COPY ./zip.sh ./
+
+VOLUME ["/lambda"]
+
+ENTRYPOINT [ "sh", "/usr/src/app/zip.sh" ]

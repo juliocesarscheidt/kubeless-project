@@ -1,0 +1,68 @@
+apiVersion: kubeless.io/v1beta1
+kind: Function
+metadata:
+  name: bitcoinfn
+  label:
+    created-by: kubeless
+    function: {{ include "bitcoinfn.fullname" . }}
+    {{- include "bitcoinfn.labels" . | nindent 4 }}
+spec:
+  deployment:
+    metadata:
+      annotations:
+        "annotation": "deploy"
+      labels:
+        {{- include "bitcoinfn.selectorLabels" . | nindent 8 }}
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          annotations:
+            "annotation": "pod"
+          labels:
+            {{- include "bitcoinfn.selectorLabels" . | nindent 12 }}
+        spec:
+          containers:
+            - env:
+              - name: CI_ENV
+                value: "development"
+              name: "hello"
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+  runtime: python3.7
+  timeout: "300"
+  handler: "{{ .Values.function.handler }}"
+  deps: ""
+  checksum: "sha256:{{ .Values.function.sha256Sum }}"
+  function: https://github.com/juliocesarscheidt/kubeless-project/raw/main/function.zip?raw=true
+  function-content-type: url+zip
+  service:
+    ports:
+    - name: http-function-port
+      port: {{ .Values.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.service.targetPort }}
+    selector:
+      created-by: kubeless
+      function: {{ include "bitcoinfn.fullname" . }}
+    type: {{ .Values.service.type }}
+
+---
+
+{{- if .Values.ingress.enabled }}
+apiVersion: kubeless.io/v1beta1
+kind: HTTPTrigger
+metadata:
+  labels:
+    created-by: kubeless
+  name: bitcoinfn-http-trigger
+spec:
+  basic-auth-secret: ""
+  cors-enable: true
+  function-name: bitcoinfn
+  gateway: nginx
+  host-name: {{ .Values.ingress.host }}
+  path: ""
+  tls: false
+  tls-secret: ""
+{{- end }}
